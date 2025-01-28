@@ -40,8 +40,17 @@ pirate_weather_api_key = ENV.fetch("PIRATE_WEATHER_KEY")
 # Dig around the Pirate Weather website to find how their API is structured: https://docs.pirateweather.net/en/latest/API/
 # API request structure: https://api.pirateweather.net/forecast/[apikey]/[latitude],[longitude]
 
-# CREATE MY URL
-weather_url = https://api.pirateweather.net/forecast/#???{"PIRATE_WEATHER_KEY"}/[latitude],[longitude]
+# Create my url
+weather_url = "https://api.pirateweather.net/forecast/#???{"PIRATE_WEATHER_KEY"}/#{lat},#{long}"
+
+# Print the URL to then copy into the browser to inspect
+
+
+# Inspect the JSON output of the URL to find out how to get the info I want
+
+
+# Extract the info I want
+
 
 
 # Display current temp and summary of weather for next hour
