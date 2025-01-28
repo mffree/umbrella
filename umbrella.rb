@@ -35,12 +35,12 @@ pp long
 
 # Get API key
 # I first had to copy the API key from the Secrets page of the class website to the .env file
-pirate_weather_api_key = ENV.fetch("PIRATE_WEATHER_API_KEY")
+pirate_weather_api_key = ENV.fetch("PIRATE_WEATHER_KEY")
 
 # Dig around the Pirate Weather website to find how their API is structured: https://docs.pirateweather.net/en/latest/API/
 # API request structure: https://api.pirateweather.net/forecast/[apikey]/[latitude],[longitude]
 
-CREATE MY URL
+# CREATE MY URL
 
 
 
