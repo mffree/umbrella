@@ -41,7 +41,7 @@ pirate_weather_api_key = ENV.fetch("PIRATE_WEATHER_KEY")
 # API request structure: https://api.pirateweather.net/forecast/[apikey]/[latitude],[longitude]
 
 # CREATE MY URL
-
+weather_url = https://api.pirateweather.net/forecast/#???{"PIRATE_WEATHER_KEY"}/[latitude],[longitude]
 
 
 # Display current temp and summary of weather for next hour
