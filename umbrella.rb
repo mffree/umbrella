@@ -41,16 +41,34 @@ pirate_weather_api_key = ENV.fetch("PIRATE_WEATHER_KEY")
 # API request structure: https://api.pirateweather.net/forecast/[apikey]/[latitude],[longitude]
 
 # Create my url
-weather_url = "https://api.pirateweather.net/forecast/#???{"PIRATE_WEATHER_KEY"}/#{lat},#{long}"
+weather_url = "https://api.pirateweather.net/forecast/#{pirate_weather_api_key}/#{lat},#{long}"
 
 # Print the URL to then copy into the browser to inspect
-
+pp weather_url
 
 # Inspect the JSON output of the URL to find out how to get the info I want
-
+# Current temp
+# Summary of next hour
+# Time and precipitation probability for next 12 hours
 
 # Extract the info I want
+weather_response_string = HTTP.get(weather_url).to_s
+weather_response_parsed = JSON.parse(weather_response_string)
+#pp weather_response_parsed
+current_info = weather_response_parsed.fetch("currently")
+#pp current_info
+current_time = Time.at(current_info.fetch("time")).getlocal
+formatted_current_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+# pp current_time
+current_temp = current_info.fetch("temperature")
+pp "Currently, at #{formatted_current_time}, at #{user_loc}, it is #{current_temp} degrees out."
+
+# Next hour summary
+next_hour_summary = weather_response_parsed.fetch("hourly").fetch("data")[0].fetch("summary")
+pp "Over the next hour, it is forecasted to be #{next_hour_summary.downcase}."
+
+# Get precipitation prob. for next 12 hours and if it's above 10% for any hour, say to bring above an umbrella
+# Get next 12 hour times
 
 
-
-# Display current temp and summary of weather for next hour
+# Get next 12 precipipation probabilities
