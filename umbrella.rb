@@ -6,15 +6,15 @@ require "json"
 
 # Ask user for location
 pp "Hey where are you?"
-# user_loc_raw = gets # commented out for development
-user_loc_raw = "Chicago Booth Harper Center" # hardcode a location for development purposes
+user_loc_raw = gets # commented out for development
+# user_loc_raw = "Chicago Booth Harper Center" # hardcode a location for development purposes
 user_loc = user_loc_raw.chomp
-pp user_loc
+# pp user_loc
 
 # Get lat and long from Google maps
 gmaps_api_key = ENV.fetch("GMAPS_KEY")
 gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{user_loc}&key=#{gmaps_api_key}"
-# pp gmaps_url
+# pp gmaps_url # for testing
 
 gmaps_response_string = HTTP.get(gmaps_url).to_s
 # pp gmaps_response_string
@@ -24,11 +24,11 @@ gmaps_response_parsed = JSON.parse(gmaps_response_string) # parses the JSON into
 # Getting the location from the JSON
 # Had to copy the printed gmaps_url into the browser and manually inspect the JSON to figure out how it was structured. I tried to use Envoy but I couldn't figure out how to input the Gmaps API Key
 # The hashes are inside some arrays
-pp gmaps_location = gmaps_response_parsed.fetch("results")[0].fetch("navigation_points")[0].fetch("location") # using fetch to find the values associated with specific keys in gmaps_response.parsed, which is a Hash
-lat = gmaps_location.fetch("latitude")
-pp lat
-long = gmaps_location.fetch("longitude")
-pp long
+gmaps_location = gmaps_response_parsed.fetch("results")[0].fetch("geometry").fetch("location") # using fetch to find the values associated with specific keys in gmaps_response.parsed, which is a Hash
+lat = gmaps_location.fetch("lat")
+# pp lat
+long = gmaps_location.fetch("lng")
+# pp long
 
 
 # Get weather at user's coordinates through Pirate Weather
@@ -44,7 +44,7 @@ pirate_weather_api_key = ENV.fetch("PIRATE_WEATHER_KEY")
 weather_url = "https://api.pirateweather.net/forecast/#{pirate_weather_api_key}/#{lat},#{long}"
 
 # Print the URL to then copy into the browser to inspect
-pp weather_url
+# pp weather_url
 
 # Inspect the JSON output of the URL to find out how to get the info I want
 # Current temp
@@ -69,6 +69,26 @@ pp "Over the next hour, it is forecasted to be #{next_hour_summary.downcase}."
 
 # Get precipitation prob. for next 12 hours and if it's above 10% for any hour, say to bring above an umbrella
 # Get next 12 hour times
+hourly_data = weather_response_parsed.fetch("hourly").fetch("data")
 
+# Creating a counter that counts up to 1 if there is any hour in the next 12 hours where the precip. prob. is above 10%
+i = 0
+p = 0
+while i < 12
+  precipProb = hourly_data[i].fetch("precipProbability")
+  if precipProb > 0.1
+    p = p + 1
+    i = 12
+  else
+    i = i + 1
+  end
+end
 
-# Get next 12 precipipation probabilities
+# Do final print about needing an umbrella or not
+if p > 0
+  hourly_time = Time.at(hourly_data[i].fetch("time")).getlocal
+  formatted_hourly_time = hourly_time.strftime("%Y-%m-%d %H:%M:%S")
+  pp "At #{formatted_hourly_time}, there is a #{precipProb * 100}% chance of rain. You should probably bring an umbrella."
+else
+  pp "You probably won't need an umbrella today."
+end
